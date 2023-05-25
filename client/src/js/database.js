@@ -16,17 +16,30 @@ const initdb = async () =>
   });
 
 // Export a function we will use to UPDATE the database
-export const putDb = async (content) => console.error('putDb not implemented');
+export const putDb = async (content) => {
+  // Database/Version
+  const jateDB = await openDB("jate", 1);
+  // Transaction
+  const tx = jateDB.transaction("jate", "readwrite");
+  // Object store
+  const store = tx.objectStore("jate");
+  const request = store.put({id: 1, value: content});
+  const result = await request;
+  // If data was successfully saved to database
+  console.log("Data saved to database", result);
+  // If data was not successfully saved to database
+  console.error('putDb not implemented');
+};
 
 // Export a function we will use to GET to the database
 export const getDb = async () => {
   console.log("GET from the database");
 
   // Create a connection to the database with the version we want to use
-  const jateDb = await openDB("jate", 1);
+  const jateDB = await openDB("jate", 1);
 
   // Create a new transaction and specify the database and data privliges
-  const tx = jateDb.transaction("jate", "readwrite");
+  const tx = jateDB.transaction("jate", "readwrite");
 
   // Open up the desired object store
   const store = tx.objectStore("jate");
