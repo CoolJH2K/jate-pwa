@@ -17,18 +17,13 @@ const initdb = async () =>
 
 // Export a function we will use to UPDATE the database
 export const putDb = async (content) => {
-  // Database/Version
+  console.log("PUT to the database");
   const jateDB = await openDB("jate", 1);
-  // Transaction
   const tx = jateDB.transaction("jate", "readwrite");
-  // Object store
   const store = tx.objectStore("jate");
   const request = store.put({id: 1, value: content});
   const result = await request;
-  // If data was successfully saved to database
-  console.log("Data saved to database", result);
-  // If data was not successfully saved to database
-  console.error('putDb not implemented');
+  console.log("Data saved to database", result.value);
 };
 
 // Export a function we will use to GET to the database
@@ -44,12 +39,14 @@ export const getDb = async () => {
   // Open up the desired object store
   const store = tx.objectStore("jate");
 
-  // Use the .delete() method to get all data in the database
-  const request = store.delete(id);
+  const request = store.get(1);
 
   // Get confirmation of the request
   const result = await request;
-  console.log("result.value", result);
+  result
+    ? console.log("Data retrieved from the database", result.value)
+    : console.log("Data not found in the database");
+  // Check if a variable is defined and if it is, return it. See MDN Docs on Optional Chaining (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)
   return result?.value;
 };
 
